@@ -1,9 +1,14 @@
+application:
+  api:
+    path: /nimbus/api/v1.0
+
 spring:
   application:
     name: task-management
   data:
     mongodb:
-      uri: ${mongodb.uri}
+      #uri: ${mongodb.uri}
+      uri: "mongodb://mazkte:t3st@localhost:27017/?authMechanism=SCRAM-SHA-256"
       database: task-mgnt
   cloud:
     vault:
@@ -15,6 +20,8 @@ spring:
         default-context: application
 server:
   port: 8082
+  servlet:
+    context-path: /nimbus
 
 springdoc:
   api-docs:
@@ -30,5 +37,6 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
 jwt:
-  secret: ${jwt-secret}
+  #secret: ${jwt-secret}
+  secret: "CKqHITrMPzepvWmczHw+O4QpWgYKlX0b3hqrBxYWu2UWN9Xrr2zKq8ziOqMOfYiLSP5pJYR2FOoJpRGLUrGVeQ=="
   expiration: 60000

@@ -37,7 +37,7 @@ import reactor.core.publisher.Mono;
  */
 @Tag(name = "Task", description = "Gestiona parámetros de búsqueda")
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("${application.api.path}/tasks")
 @RequiredArgsConstructor
 public class TaskController {
 

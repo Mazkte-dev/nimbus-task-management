@@ -3,9 +3,16 @@ package com.encora.samples.nimbus.task.management.expose.web.resolvers;
 import com.encora.samples.nimbus.task.management.utils.annotations.HttpHeadersMapping;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.engine.ValidatorFactoryImpl;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.reactive.BindingContext;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
@@ -44,7 +51,16 @@ public class HttpHeaderArgumentResolver implements HandlerMethodArgumentResolver
 
       Object obj = mapper.convertValue(headers, parameter.getParameterType());
 
-      sink.success(obj);
+      ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+      Validator validator = factory.getValidator();
+
+      Set<ConstraintViolation<Object>> violations = validator.validate(obj);
+      if (!violations.isEmpty()) {
+        sink.error(new ConstraintViolationException(violations));
+      } else {
+        sink.success(obj);
+      }
+
     });
   }
 
